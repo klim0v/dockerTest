@@ -17,6 +17,7 @@ services:
       - ./:/var/www/site
     links:
       - db
+      - redis
       - memcached
 
   db:
@@ -33,3 +34,10 @@ services:
 
   memcached:
      image: memcached
+     ports:
+      - "11211:11211"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"

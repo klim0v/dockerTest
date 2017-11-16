@@ -5,6 +5,9 @@ MAINTAINER Dan Pupius <dan@pupi.us>
 RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install \
     apache2 php7.0 php7.0-mysql libapache2-mod-php7.0 curl lynx-cur
 
+# Install php-memcached
+RUN apt-get install -y php-memcached
+
 # Enable apache mods.
 RUN a2enmod php7.0
 RUN a2enmod rewrite
