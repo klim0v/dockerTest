@@ -32,5 +32,20 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 # Update the default apache site with the config we created.
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
+#####################################
+# Non-Root User:
+#####################################
+
+# Add a non-root user to prevent files being created with root permissions on host machine.
+ARG PUID=1000
+ARG PGID=1000
+
+ENV PUID ${PUID}
+ENV PGID ${PGID}
+
+RUN groupadd -g ${PGID} user && \
+    useradd -u ${PUID} -g user -m user && \
+    apt-get update -yqq
+
 # By default start up apache in the foreground, override with /bin/bash for interative.
 CMD /usr/sbin/apache2ctl -D FOREGROUND
