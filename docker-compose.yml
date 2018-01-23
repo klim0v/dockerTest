@@ -7,6 +7,7 @@ services:
     ports:
       - '80:80' # expose 80 on host and sent to 80 in container
     volumes:
+      - ./storage/app/public:/storage/app/public
       - ./public:/public
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     links:
@@ -19,8 +20,7 @@ services:
       - ./:/var/www/site
     links:
       - db
-      - redis
-      - memcached
+      - sphinx
 
   db:
     image: mysql:5.7
@@ -34,12 +34,13 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: root
 
-  memcached:
-     image: memcached
-     ports:
-      - "11211:11211"
-
-  redis:
-    image: redis
+  sphinx:
+    image: stefobark/sphinxdocker
+    command: ./indexandsearch.sh
+    volumes:
+     - ./docker/sphinx:/etc/sphinxsearch
+     - ./docker/runtime/sphinx:/var/lib/sphinx
     ports:
-      - "6379:6379"
+     - "9306:9306"
+    links:
+     - db
